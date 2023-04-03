@@ -7,9 +7,9 @@ class AppiumConfig:
 
     @pytest.fixture(scope="function", autouse=True)
     def handle_app_launch(self):
-        json_dic = read_utils.get_dic_from_json("../testdata/config.json")
-
-        if json_dic["device"] == "local":
+        json_dic = read_utils.get_value_from_json("../testdata/config.json", "device")
+        json_dic_port = read_utils.get_value_from_json("../testdata/config.json", "port")
+        if json_dic == "local":
             des_cap = {
                 "platformName": "Android",
                 "deviceName": "oneplus",
@@ -30,7 +30,7 @@ class AppiumConfig:
                     "accessKey": "e5wyS7fEvx44kHQxJus3"
                 }
             }
-        self.driver = webdriver.Remote(command_executor="http://localhost:4723/wd/hub", desired_capabilities=des_cap)
+        self.driver = webdriver.Remote(command_executor=f"http://localhost:{json_dic_port}/wd/hub", desired_capabilities=des_cap)
         self.driver.implicitly_wait(30)
         yield
         self.driver.quit()
